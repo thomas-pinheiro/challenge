@@ -1,6 +1,6 @@
-require("dotenv").config();
-const express = require("express");
-const { Octokit } = require("@octokit/core");
+import "dotenv/config";
+import express from "express";
+import { Octokit } from "@octokit/core";
 
 // Configurações da aplicação
 const PORT = process.env.PORT || 3000;
