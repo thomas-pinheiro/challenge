@@ -17,10 +17,10 @@ const octokit = new Octokit({
 });
 
 // Buscar repositórios com paginação e filtro
-const fetchRepositories = async (user, language, per_page=5, page=1) => {
+const fetchRepositories = async (user, language, per_page=5, user_page=1) => {
   let repositories = [];
   let page = 1;
-  let total_repositories = per_page * page
+  let total_repositories = per_page * user_page
 
   try {
     while (repositories.length < total_repositories) {
@@ -43,7 +43,7 @@ const fetchRepositories = async (user, language, per_page=5, page=1) => {
       page++;
     }
 
-    const startIndex = per_page * (page - 1);
+    const startIndex = per_page * (user_page - 1);
     const endIndex = startIndex + per_page;
 
     return repositories.slice(startIndex, endIndex);
