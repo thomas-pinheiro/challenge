@@ -16,15 +16,17 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
-// Utilitário para buscar repositórios com paginação e filtro
-const fetchRepositories = async (organization, language) => {
+// Buscar repositórios com paginação e filtro
+const fetchRepositories = async (user, language) => {
   let repositories = [];
   let page = 1;
 
   try {
     while (repositories.length < 5) {
-      const { data } = await octokit.request("GET /orgs/{org}/repos", {
-        org: organization,
+      // Pode-se utilizar GET /orgs/{org}/repos que resultaria no mesmo resultado, 
+      // diferenciando apenas se houver permissões para visualizar repositórios privados.
+      const { data } = await octokit.request("GET /users/{user}/repos", { 
+        user: user,
         headers: { "X-GitHub-Api-Version": "2022-11-28" },
         per_page: 100,
         page,
@@ -36,7 +38,7 @@ const fetchRepositories = async (organization, language) => {
 
       repositories = [...repositories, ...filtered];
 
-      if (data.length < 100) break; // Não há mais páginas
+      if (data.length < 100) break; // Quando houver menos itens que o máximo, logo não há paginas seguintes.
       page++;
     }
 
@@ -49,15 +51,15 @@ const fetchRepositories = async (organization, language) => {
 
 // Rota principal
 app.get("/repos", async (req, res) => {
-  const { organization, language } = req.query;
+  const { user, language } = req.query;
 
-  // Validação dos parâmetros
-  if (!organization) {
+  // Validação dos parâmetros, language é opcional
+  if (!user) {
     return res.status(400).json({ error: "Organization is required as a query parameter." });
   }
 
   try {
-    const repositories = await fetchRepositories(organization, language);
+    const repositories = await fetchRepositories(user, language);
     res.json(repositories);
   } catch (error) {
     res.status(500).json({ error: error.message });
