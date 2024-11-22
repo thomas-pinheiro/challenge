@@ -55,7 +55,7 @@ app.get("/repos", async (req, res) => {
 
   // Validação dos parâmetros, language é opcional
   if (!user) {
-    return res.status(400).json({ error: "User is required as a query parameter." });
+    return res.status(400).json({ error: "The 'user' parameter is required in the query." });
   }
 
   try {
