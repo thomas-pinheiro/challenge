@@ -17,12 +17,13 @@ const octokit = new Octokit({
 });
 
 // Buscar repositórios com paginação e filtro
-const fetchRepositories = async (user, language) => {
+const fetchRepositories = async (user, language, per_page=5, page=1) => {
   let repositories = [];
   let page = 1;
+  let total_repositories = per_page * page
 
   try {
-    while (repositories.length < 5) {
+    while (repositories.length < total_repositories) {
       // Pode-se utilizar GET /orgs/{org}/repos que resultaria no mesmo resultado, 
       // diferenciando apenas se houver permissões para visualizar repositórios privados.
       const { data } = await octokit.request("GET /users/{user}/repos", { 
@@ -42,7 +43,10 @@ const fetchRepositories = async (user, language) => {
       page++;
     }
 
-    return repositories.slice(0, 5);
+    const startIndex = per_page * (page - 1);
+    const endIndex = startIndex + per_page;
+
+    return repositories.slice(startIndex, endIndex);
   } catch (error) {
     console.error(`Error fetching repositories: ${error.message}`);
     throw new Error("Failed to fetch repositories from GitHub");
@@ -51,7 +55,7 @@ const fetchRepositories = async (user, language) => {
 
 // Rota principal
 app.get("/repos", async (req, res) => {
-  const { user, language } = req.query;
+  const { user, language, per_page, page } = req.query;
 
   // Validação dos parâmetros, language é opcional
   if (!user) {
@@ -59,7 +63,7 @@ app.get("/repos", async (req, res) => {
   }
 
   try {
-    const repositories = await fetchRepositories(user, language);
+    const repositories = await fetchRepositories(user, language, per_page, page);
     res.json(repositories);
   } catch (error) {
     res.status(500).json({ error: error.message });
