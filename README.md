@@ -13,8 +13,7 @@ Antes de rodar a aplicação, você precisa garantir que tem as seguintes depend
 
 1. **Clone o repositório**:
   ```
-   git clone <URL do repositório>
-   cd <diretório do repositório>
+   git clone https://github.com/thomas-pinheiro/challenge.git
   ```
 
 2. **Instale as dependências do projeto**:
