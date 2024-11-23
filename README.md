@@ -56,6 +56,8 @@ Este endpoint retorna uma lista de até 5 repositórios de uma organização do 
 | :--------- | :------ | :------------------------------------------------------------------------ |
 | `user`     | `string` | **Obrigatório**. Nome de usuário ou organização do GitHub a ser consultado. |
 | `language` | `string` | Opcional. Linguagem de programação para filtrar os repositórios. Se não fornecido, retornará repositórios de qualquer linguagem. |
+| `per_page` | `integer` | Opcional. Opcional. Define o número de repositórios a serem retornados por página. O valor padrão é 5. Máximo permitido: 10. |
+| `page` | `integer` | Opcional. Indica o número da página de resultados que você deseja retornar. O valor padrão é 1. |
 
 
 #### Exemplo de requisição:

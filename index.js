@@ -16,6 +16,36 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
+// Função para validar um único parâmetro
+const validateSingleParam = (param, paramName, type = 'string', required = false) => {
+  if (required && !param) {
+    throw new Error(`${paramName} is required.`);
+  }
+
+  if (param) {
+    if (type === 'string' && typeof param !== 'string') {
+      throw new Error(`${paramName} must be a string.`);
+    }
+    if (type === 'integer' && (!Number.isInteger(Number(param)) || Number(param) <= 0)) {
+      throw new Error(`${paramName} must be a positive integer.`);
+    }
+  }
+};
+
+// Função para validar todos os parâmetros da query
+const validateQueryParams = (params) => {
+  const paramConfigs = [
+    { name: 'user', type: 'string', required: true },
+    { name: 'language', type: 'string', required: false },
+    { name: 'per_page', type: 'integer', required: false },
+    { name: 'page', type: 'integer', required: false },
+  ];
+
+  paramConfigs.forEach(({ name, type, required }) => {
+    validateSingleParam(params[name], name, type, required);
+  });
+};
+
 // Buscar repositórios com paginação e filtro
 const fetchRepositories = async (user, language, per_page=5, user_page=1) => {
   let repositories = [];
@@ -57,12 +87,9 @@ const fetchRepositories = async (user, language, per_page=5, user_page=1) => {
 app.get("/repos", async (req, res) => {
   const { user, language, per_page, page } = req.query;
 
-  // Validação dos parâmetros, language é opcional
-  if (!user) {
-    return res.status(400).json({ error: "The 'user' parameter is required in the query." });
-  }
-
   try {
+    validateQueryParams(req.query);
+
     const repositories = await fetchRepositories(user, language, per_page, page);
     res.json(repositories);
   } catch (error) {
