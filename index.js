@@ -62,8 +62,6 @@ const fetchRepositories = async (token, user, language, per_page = 5, user_page 
   let repositories = [];
   let page = 1;
   let total_repositories = per_page * user_page;
-  
-  console.log(`Token: ${token}`)
 
   try {
     const octokit = new Octokit({ auth: token });

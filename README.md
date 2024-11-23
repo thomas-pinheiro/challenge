@@ -23,17 +23,7 @@ Antes de rodar a aplicação, você precisa garantir que tem as seguintes depend
 npm install
 ```
 
-3. **Definir Variáveis de Ambiente**:
-   Crie um arquivo .env na raiz do projeto e defina o token do GitHub da seguinte forma:
-
-```
-GITHUB_TOKEN=seu_token_do_github
-PORT=3000
-```
-
-Você pode obter um GitHub Token através do GitHub.
-
-4. **Iniciar o Servidor**
+3. **Iniciar o Servidor**
    Para iniciar o servidor, execute:
 
 ```
@@ -44,9 +34,9 @@ A API estará disponível em http://localhost:3000.
 
 ## Como funciona?
 
-A API se autentica com o GitHub utilizando um token de acesso pessoal (GITHUB_TOKEN).
+A API se autentica com o GitHub utilizando um token de acesso pessoal informado no Headers da requisição.
 
-Ao acessar o endpoint `/repos`, a aplicação busca até 5 repositórios públicos de um usuário do GitHub. Caso um filtro de linguagem seja passado, ele é aplicado para retornar apenas repositórios com a linguagem especificada.
+Ao acessar o endpoint `/repos`, a aplicação busca repositórios públicos mais antigos de um usuário ou organização do GitHub. Caso um filtro de linguagem seja passado, ele é aplicado para retornar apenas repositórios com a linguagem especificada.
 
 A API retorna informações sobre os repositórios, como nome, descrição, linguagem, avatar, link para o repositório no GitHub e mais.
 
@@ -55,6 +45,12 @@ A API retorna informações sobre os repositórios, como nome, descrição, ling
 `GET /repos`
 
 Este endpoint retorna uma lista de até 5 repositórios de uma organização do GitHub. Você pode passar parâmetros para filtrar os repositórios por linguagem de programação.
+
+#### Cabeçalhos
+
+- Authorization: **Obrigatório**. O cabeçalho `Authorization` deve conter apenas o token de autenticação do GitHub (exemplo: Authorization: <token_do_github>).
+
+#### Parâmetros
 
 | Parâmetro  | Tipo      | Descrição                                                                                                                        |
 | :--------- | :-------- | :------------------------------------------------------------------------------------------------------------------------------- |
@@ -66,7 +62,8 @@ Este endpoint retorna uma lista de até 5 repositórios de uma organização do 
 #### Exemplo de requisição:
 
 ```
-curl --location 'http://localhost:3000/repos?user=fulano&language=javascript&per_page=5&page=1'
+curl --location 'http://localhost:3000/repos?user=fulano&language=javascript&per_page=5&page=1' \
+--header 'Authorization: <token_do_github>'
 ```
 
 #### Exemplo de resposta:
@@ -100,5 +97,6 @@ curl --location 'http://localhost:3000/repos?user=fulano&language=javascript&per
 
 ## Erros:
 
-- `400` Bad Request: Se o parâmetro user não for fornecido.
-- `500` Internal Server Error: Se ocorrer um erro ao buscar os repositórios do GitHub.
+- `400` Bad Request: O parâmetro `user` é obrigatório e deve ser fornecido.
+- `401` Unauthorized: O Token de autenticação do GitHub deve ser fornecido no cabeçalho `Authorization`.
+- `500` Internal Server Error: Ocorreu um erro ao tentar buscar os repositórios do GitHub ou ao processar a solicitação no servidor da API.
