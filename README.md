@@ -1,6 +1,6 @@
 # API para Buscar Repositórios do GitHub
 
-Esta API permite buscar repositórios de um usuário no GitHub com a possibilidade de filtrar por linguagem de programação. Ela utiliza o `Octokit` da GitHub para interagir com a API do GitHub e exibe até 5 repositórios, com suporte a paginação.
+Esta API permite buscar repositórios de um usuário no GitHub com a possibilidade de filtrar por linguagem de programação. Ela utiliza o `Octokit` da GitHub para interagir com a API do GitHub e exibe de 5 até 10 repositórios, com suporte a paginação.
 
 ## Requisitos
 
@@ -32,9 +32,13 @@ npm start
 
 A API estará disponível em http://localhost:3000.
 
+4. **Deploy**
+
+Você pode realizar o deploy em [Railway](https://railway.com/) conectando com o seu repositório do Github.
+
 ## Como funciona?
 
-A API se autentica com o GitHub utilizando um token de acesso pessoal informado no Headers da requisição.
+A autenticação da API é realizada por meio de um token de acesso pessoal, que deve ser incluído no cabeçalho `Authorization` (Header) da requisição.
 
 Ao acessar o endpoint `/repos`, a aplicação busca repositórios públicos mais antigos de um usuário ou organização do GitHub. Caso um filtro de linguagem seja passado, ele é aplicado para retornar apenas repositórios com a linguagem especificada.
 
@@ -44,7 +48,7 @@ A API retorna informações sobre os repositórios, como nome, descrição, ling
 
 `GET /repos`
 
-Este endpoint retorna uma lista de até 5 repositórios de uma organização do GitHub. Você pode passar parâmetros para filtrar os repositórios por linguagem de programação.
+Este endpoint retorna uma lista de 5 até 10 repositórios de uma organização ou usuário do GitHub. Você pode passar parâmetros para filtrar os repositórios por linguagem de programação.
 
 #### Cabeçalhos
 
@@ -55,7 +59,7 @@ Este endpoint retorna uma lista de até 5 repositórios de uma organização do 
 | Parâmetro  | Tipo      | Descrição                                                                                                                        |
 | :--------- | :-------- | :------------------------------------------------------------------------------------------------------------------------------- |
 | `user`     | `string`  | **Obrigatório**. Nome de usuário ou organização do GitHub a ser consultado.                                                      |
-| `language` | `string`  | Opcional. Linguagem de programação para filtrar os repositórios. Se não fornecido, retornará repositórios de qualquer linguagem. |
+| `language` | `string`  | Opcional. Linguagem de programação para filtrar os repositórios. Se não fornecido, retornará repositórios de qualquer linguagem. Exemplo: C# |
 | `per_page` | `integer` | Opcional. Opcional. Define o número de repositórios a serem retornados por página. O valor padrão é 5. Máximo permitido: 10.     |
 | `page`     | `integer` | Opcional. Indica o número da página de resultados que você deseja retornar. O valor padrão é 1.                                  |
 
