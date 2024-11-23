@@ -16,23 +16,32 @@ const octokit = new Octokit({
   auth: process.env.GITHUB_TOKEN,
 });
 
+// Classe de erro personalizada para HTTP
+class HttpError extends Error {
+  constructor(message, statusCode = 500) {
+    super(message);
+    this.statusCode = statusCode;
+    this.name = 'HttpError';
+  }
+}
+
 // Função para validar um único parâmetro
 const validateSingleParam = (param, paramConfig) => {
   const { name, type, required, maxValue } = paramConfig;
 
   if (required && !param) {
-    throw new Error(`${name} is required.`);
+    throw new HttpError(`${name} is required.`, 400); // Erro 400 se o parâmetro for obrigatório e não fornecido
   }
 
   if (param) {
     if (type === 'string' && typeof param !== 'string') {
-      throw new Error(`${name} must be a string.`);
+      throw new HttpError(`${name} must be a string.`, 400); // Erro 400 se o tipo estiver errado
     }
     if (type === 'integer' && (!Number.isInteger(Number(param)) || Number(param) <= 0)) {
-      throw new Error(`${name} must be a positive integer.`);
+      throw new HttpError(`${name} must be a positive integer.`, 400); // Erro 400 para valores inválidos
     }
     if (maxValue && Number(param) > maxValue) {
-      throw new Error(`${name} cannot exceed ${maxValue}.`);
+      throw new HttpError(`${name} cannot exceed ${maxValue}.`, 400); // Erro 400 para valores acima do limite
     }
   }
 };
@@ -52,15 +61,13 @@ const validateQueryParams = (params) => {
 };
 
 // Buscar repositórios com paginação e filtro
-const fetchRepositories = async (user, language, per_page=5, user_page=1) => {
+const fetchRepositories = async (user, language, per_page = 5, user_page = 1) => {
   let repositories = [];
   let page = 1;
-  let total_repositories = per_page * user_page
+  let total_repositories = per_page * user_page;
 
   try {
     while (repositories.length < total_repositories) {
-      // Pode-se utilizar GET /orgs/{org}/repos que resultaria no mesmo resultado, 
-      // diferenciando apenas se houver permissões para visualizar repositórios privados.
       const { data } = await octokit.request("GET /users/{user}/repos", { 
         user: user,
         headers: { "X-GitHub-Api-Version": "2022-11-28" },
@@ -74,7 +81,7 @@ const fetchRepositories = async (user, language, per_page=5, user_page=1) => {
 
       repositories = [...repositories, ...filtered];
 
-      if (data.length < 100) break; // Quando houver menos itens que o máximo, logo não há paginas seguintes.
+      if (data.length < 100) break; // Quando houver menos itens que o máximo, logo não há páginas seguintes.
       page++;
     }
 
@@ -84,7 +91,7 @@ const fetchRepositories = async (user, language, per_page=5, user_page=1) => {
     return repositories.slice(startIndex, endIndex);
   } catch (error) {
     console.error(`Error fetching repositories: ${error.message}`);
-    throw new Error("Failed to fetch repositories from GitHub");
+    throw new HttpError("Failed to fetch repositories from GitHub", 500); // Erro 500 se ocorrer falha no GitHub
   }
 };
 
@@ -98,8 +105,17 @@ app.get("/repos", async (req, res) => {
     const repositories = await fetchRepositories(user, language, per_page, page);
     res.json(repositories);
   } catch (error) {
-    res.status(500).json({ error: error.message });
+    if (error instanceof HttpError) {
+      res.status(error.statusCode).json({ error: error.message });
+    } else {
+      res.status(500).json({ error: "Internal Server Error" });
+    }
   }
+});
+
+// Capturar rotas não encontradas
+app.use((req, res) => {
+  res.status(404).json({ error: "Route not found" });
 });
 
 // Iniciar o servidor
