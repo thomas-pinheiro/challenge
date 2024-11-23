@@ -25,28 +25,8 @@ class HttpError extends Error {
   }
 }
 
-// Função para validar um único parâmetro
-const validateSingleParam = (param, paramConfig) => {
-  const { name, type, required, maxValue } = paramConfig;
 
-  if (required && !param) {
-    throw new HttpError(`${name} is required.`, 400); // Erro 400 se o parâmetro for obrigatório e não fornecido
-  }
-
-  if (param) {
-    if (type === 'string' && typeof param !== 'string') {
-      throw new HttpError(`${name} must be a string.`, 400); // Erro 400 se o tipo estiver errado
-    }
-    if (type === 'integer' && (!Number.isInteger(Number(param)) || Number(param) <= 0)) {
-      throw new HttpError(`${name} must be a positive integer.`, 400); // Erro 400 para valores inválidos
-    }
-    if (maxValue && Number(param) > maxValue) {
-      throw new HttpError(`${name} cannot exceed ${maxValue}.`, 400); // Erro 400 para valores acima do limite
-    }
-  }
-};
-
-// Função para validar todos os parâmetros da query
+// Função de validação de parâmetros
 const validateQueryParams = (params) => {
   const paramConfigs = [
     { name: 'user', type: 'string', required: true },
@@ -56,7 +36,22 @@ const validateQueryParams = (params) => {
   ];
 
   paramConfigs.forEach(paramConfig => {
-    validateSingleParam(params[paramConfig.name], paramConfig);
+    const param = params[paramConfig.name];
+    if (paramConfig.required && !param) {
+      throw new HttpError(`${paramConfig.name} is required.`, 400);
+    }
+
+    if (param) {
+      if (paramConfig.type === 'string' && typeof param !== 'string') {
+        throw new HttpError(`${paramConfig.name} must be a string.`, 400);
+      }
+      if (paramConfig.type === 'integer' && (!Number.isInteger(Number(param)) || Number(param) <= 0)) {
+        throw new HttpError(`${paramConfig.name} must be a positive integer.`, 400);
+      }
+      if (paramConfig.maxValue && Number(param) > paramConfig.maxValue) {
+        throw new HttpError(`${paramConfig.name} cannot exceed ${paramConfig.maxValue}.`, 400);
+      }
+    }
   });
 };
 
@@ -91,7 +86,7 @@ const fetchRepositories = async (user, language, per_page = 5, user_page = 1) =>
     return repositories.slice(startIndex, endIndex);
   } catch (error) {
     console.error(`Error fetching repositories: ${error.message}`);
-    throw new HttpError("Failed to fetch repositories from GitHub", 500); // Erro 500 se ocorrer falha no GitHub
+    throw new HttpError("Failed to fetch repositories from GitHub", 500); 
   }
 };
 
@@ -103,7 +98,12 @@ app.get("/repos", async (req, res) => {
     validateQueryParams(req.query);
 
     const repositories = await fetchRepositories(user, language, per_page, page);
-    res.json(repositories);
+    
+    res.status(200).json({
+      success: true,
+      data: repositories,
+    });
+
   } catch (error) {
     if (error instanceof HttpError) {
       res.status(error.statusCode).json({ error: error.message });
