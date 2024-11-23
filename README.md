@@ -1,3 +1,27 @@
+# Desafio Técnico - Chatbot Blipper
+
+Olá, bem-vindo ao meu repositório! ✌️
+
+Aqui está o meu trabalho para o desafio técnico Blipper, onde o objetivo foi construir um chatbot na plataforma Blip, integrado com a API pública do GitHub. Esse bot exibe informações sobre os 5 repositórios mais antigos de [github.com/takenet](https://github.com/orgs/takenet/repositories), tudo de forma automatizada e interativa!
+
+## Estrutura do repositório:
+
+- `/flow`: Contém o arquivo JSON exportado do Blip Builder, que representa todo o fluxo conversacional do chatbot.
+- `/medias`: Aqui estão as imagens que aparecem nos cards do carrossel dos valores.
+- `/api`: A API intermediária que desenvolvi para integrar com o GitHub e buscar informações sobre os repositórios. Para hospedar a API, estou usando o [Railway](https://railway.com/), uma plataforma que facilita a implementação conectada com este repositório.
+
+## O que você precisa saber para rodar o projeto
+
+Para garantir que tudo funcione corretamente, existe uma **configuração importante** na plataforma Blip. Você precisa criar uma variável sensível chamada `gitToken`, onde será armazenado o seu token válido da API GitHub. Com isso, a integração entre o chatbot e a API intermediária com GitHub vai funcionar sem problemas!
+
+## Como rodar o projeto
+
+1. Importe o fluxo JSON para o Blip Builder.
+2. Configure a variável sensível `gitToken` com um token válido da API GitHub.
+3. Pronto! O chatbot estará funcionando e pronto para mostrar os repositórios mais antigos de [github.com/takenet](https://github.com/orgs/takenet/repositories).
+
+---
+
 # API para Buscar Repositórios do GitHub
 
 Esta API permite buscar repositórios de um usuário no GitHub com a possibilidade de filtrar por linguagem de programação. Ela utiliza o `Octokit` da GitHub para interagir com a API do GitHub e exibe de 5 até 10 repositórios, com suporte a paginação.
@@ -56,12 +80,12 @@ Este endpoint retorna uma lista de 5 até 10 repositórios de uma organização 
 
 #### Parâmetros
 
-| Parâmetro  | Tipo      | Descrição                                                                                                                        |
-| :--------- | :-------- | :------------------------------------------------------------------------------------------------------------------------------- |
-| `user`     | `string`  | **Obrigatório**. Nome de usuário ou organização do GitHub a ser consultado.                                                      |
+| Parâmetro  | Tipo      | Descrição                                                                                                                                    |
+| :--------- | :-------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| `user`     | `string`  | **Obrigatório**. Nome de usuário ou organização do GitHub a ser consultado.                                                                  |
 | `language` | `string`  | Opcional. Linguagem de programação para filtrar os repositórios. Se não fornecido, retornará repositórios de qualquer linguagem. Exemplo: C# |
-| `per_page` | `integer` | Opcional. Opcional. Define o número de repositórios a serem retornados por página. O valor padrão é 5. Máximo permitido: 10.     |
-| `page`     | `integer` | Opcional. Indica o número da página de resultados que você deseja retornar. O valor padrão é 1.                                  |
+| `per_page` | `integer` | Opcional. Opcional. Define o número de repositórios a serem retornados por página. O valor padrão é 5. Máximo permitido: 10.                 |
+| `page`     | `integer` | Opcional. Indica o número da página de resultados que você deseja retornar. O valor padrão é 1.                                              |
 
 #### Exemplo de requisição:
 
