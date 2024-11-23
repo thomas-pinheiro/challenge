@@ -17,17 +17,22 @@ const octokit = new Octokit({
 });
 
 // Função para validar um único parâmetro
-const validateSingleParam = (param, paramName, type = 'string', required = false) => {
+const validateSingleParam = (param, paramConfig) => {
+  const { name, type, required, maxValue } = paramConfig;
+
   if (required && !param) {
-    throw new Error(`${paramName} is required.`);
+    throw new Error(`${name} is required.`);
   }
 
   if (param) {
     if (type === 'string' && typeof param !== 'string') {
-      throw new Error(`${paramName} must be a string.`);
+      throw new Error(`${name} must be a string.`);
     }
     if (type === 'integer' && (!Number.isInteger(Number(param)) || Number(param) <= 0)) {
-      throw new Error(`${paramName} must be a positive integer.`);
+      throw new Error(`${name} must be a positive integer.`);
+    }
+    if (maxValue && Number(param) > maxValue) {
+      throw new Error(`${name} cannot exceed ${maxValue}.`);
     }
   }
 };
@@ -37,12 +42,12 @@ const validateQueryParams = (params) => {
   const paramConfigs = [
     { name: 'user', type: 'string', required: true },
     { name: 'language', type: 'string', required: false },
-    { name: 'per_page', type: 'integer', required: false },
+    { name: 'per_page', type: 'integer', required: false, maxValue: 10 },
     { name: 'page', type: 'integer', required: false },
   ];
 
-  paramConfigs.forEach(({ name, type, required }) => {
-    validateSingleParam(params[name], name, type, required);
+  paramConfigs.forEach(paramConfig => {
+    validateSingleParam(params[paramConfig.name], paramConfig);
   });
 };
 
