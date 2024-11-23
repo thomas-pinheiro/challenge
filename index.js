@@ -6,12 +6,6 @@ import { Octokit } from "@octokit/core";
 const PORT = process.env.PORT || 3000;
 const app = express();
 
-// Inicializar Octokit com validação de token
-if (!process.env.GITHUB_TOKEN) {
-  console.error("Error: Missing GITHUB_TOKEN in environment variables.");
-  process.exit(1);
-}
-
 // Classe de erro personalizada para HTTP
 class HttpError extends Error {
   constructor(message, statusCode = 500) {
