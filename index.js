@@ -12,10 +12,6 @@ if (!process.env.GITHUB_TOKEN) {
   process.exit(1);
 }
 
-const octokit = new Octokit({
-  auth: process.env.GITHUB_TOKEN,
-});
-
 // Classe de erro personalizada para HTTP
 class HttpError extends Error {
   constructor(message, statusCode = 500) {
@@ -25,6 +21,16 @@ class HttpError extends Error {
   }
 }
 
+// Middleware para verificar o header Authorization
+const checkAuthorization = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+
+  if (!authHeader) {
+    return res.status(401).json({ error: 'Token is missing in Authorization header' });
+  }
+
+  next();
+};
 
 // Função de validação de parâmetros
 const validateQueryParams = (params) => {
@@ -56,12 +62,14 @@ const validateQueryParams = (params) => {
 };
 
 // Buscar repositórios com paginação e filtro
-const fetchRepositories = async (user, language, per_page = 5, user_page = 1) => {
+const fetchRepositories = async (token, user, language, per_page = 5, user_page = 1) => {
   let repositories = [];
   let page = 1;
   let total_repositories = per_page * user_page;
 
   try {
+    const octokit = new Octokit({ auth: token });
+
     while (repositories.length < total_repositories) {
       const { data } = await octokit.request("GET /users/{user}/repos", { 
         user: user,
@@ -94,13 +102,14 @@ const fetchRepositories = async (user, language, per_page = 5, user_page = 1) =>
 };
 
 // Rota principal
-app.get("/repos", async (req, res) => {
+app.get("/repos", checkAuthorization, async (req, res) => {
   const { user, language, per_page, page } = req.query;
+  const token = req.token;
 
   try {
     validateQueryParams(req.query);
 
-    const repositories = await fetchRepositories(user, language, per_page, page);
+    const repositories = await fetchRepositories(token, user, language, per_page, page);
     
     res.status(200).json({
       success: true,
