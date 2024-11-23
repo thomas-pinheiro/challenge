@@ -86,7 +86,10 @@ const fetchRepositories = async (user, language, per_page = 5, user_page = 1) =>
     return repositories.slice(startIndex, endIndex);
   } catch (error) {
     console.error(`Error fetching repositories: ${error.message}`);
-    throw new HttpError("Failed to fetch repositories from GitHub", 500); 
+    if (error.response) {
+      throw new HttpError(`GitHub API returned an error: ${error.response.status}`, error.response.status);
+    }
+    throw new HttpError("Failed to fetch repositories from GitHub", 500);
   }
 };
 
