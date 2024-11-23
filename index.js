@@ -17,11 +17,13 @@ class HttpError extends Error {
 
 // Middleware para verificar o header Authorization
 const checkAuthorization = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers['Authorization'];
 
   if (!authHeader) {
     return res.status(401).json({ error: 'Token is missing in Authorization header' });
   }
+  
+  req.token = authHeader
 
   next();
 };
