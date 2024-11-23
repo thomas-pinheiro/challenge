@@ -2,9 +2,9 @@
 
 Olá, bem-vindo ao meu repositório! ✌️
 
-Aqui está o meu trabalho para o desafio técnico Blipper, onde o objetivo foi construir um chatbot na plataforma Blip, integrado com a API pública do GitHub. Esse bot exibe informações sobre os 5 repositórios mais antigos de [github.com/takenet](https://github.com/orgs/takenet/repositories), tudo de forma automatizada e interativa!
+Aqui está o meu trabalho desenvolvido para o desafio técnico Blipper, onde o objetivo foi construir um chatbot na plataforma Blip, integrado com a API pública do GitHub. Esse bot exibe informações sobre os 5 repositórios mais antigos de [github.com/takenet](https://github.com/orgs/takenet/repositories), tudo de forma automatizada e interativa!
 
-## Estrutura do repositório:
+## Estrutura do repositório
 
 - `/flow`: Contém o arquivo JSON exportado do Blip Builder, que representa todo o fluxo conversacional do chatbot.
 - `/medias`: Aqui estão as imagens que aparecem nos cards do carrossel dos valores.
@@ -76,7 +76,7 @@ Este endpoint retorna uma lista de 5 até 10 repositórios de uma organização 
 
 #### Cabeçalhos
 
-- Authorization: **Obrigatório**. O cabeçalho `Authorization` deve conter apenas o token de autenticação do GitHub (exemplo: Authorization: <token_do_github>).
+- `Authorization`: **Obrigatório**. O cabeçalho `Authorization` deve conter apenas o token de autenticação do GitHub (exemplo: `Authorization`: `<token_do_github>`).
 
 #### Parâmetros
 
@@ -87,14 +87,14 @@ Este endpoint retorna uma lista de 5 até 10 repositórios de uma organização 
 | `per_page` | `integer` | Opcional. Opcional. Define o número de repositórios a serem retornados por página. O valor padrão é 5. Máximo permitido: 10.                 |
 | `page`     | `integer` | Opcional. Indica o número da página de resultados que você deseja retornar. O valor padrão é 1.                                              |
 
-#### Exemplo de requisição:
+#### Exemplo de requisição
 
 ```
 curl --location 'http://localhost:3000/repos?user=fulano&language=javascript&per_page=5&page=1' \
 --header 'Authorization: <token_do_github>'
 ```
 
-#### Exemplo de resposta:
+#### Exemplo de resposta
 
 ```
 {
@@ -123,7 +123,7 @@ curl --location 'http://localhost:3000/repos?user=fulano&language=javascript&per
 }
 ```
 
-## Erros:
+## Erros da API
 
 - `400` Bad Request: O parâmetro `user` é obrigatório e deve ser fornecido.
 - `401` Unauthorized: O Token de autenticação do GitHub deve ser fornecido no cabeçalho `Authorization`.
