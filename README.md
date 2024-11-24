@@ -28,10 +28,12 @@ Esta API permite buscar repositórios de um usuário no GitHub com a possibilida
 
 ## Requisitos
 
-Antes de rodar a aplicação, você precisa garantir que tem as seguintes dependências instaladas:
+Antes de rodar a aplicação, verifique se você tem os seguintes itens configurados:
 
-- [Node.js](https://nodejs.org/)
-- [GitHub Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic) para autenticação via Octokit.
+1. [Node.js](https://nodejs.org/)
+   - A aplicação é construída sobre o Node.js, então você precisa ter o Node.js instalado na sua máquina.
+2. [GitHub Token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens#creating-a-personal-access-token-classic):
+   - A aplicação usa a API do GitHub para buscar dados de repositórios, e para isso você precisará de um Token de Acesso Pessoal (Personal Access Token) para autenticação.
 
 ## Instalação
 
@@ -80,13 +82,13 @@ Este endpoint retorna uma lista de 5 até 10 repositórios de uma organização 
 
 #### Parâmetros
 
-| Parâmetro  | Tipo      | Descrição                                                                                                                                    |
-| :--------- | :-------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| `user`     | `string`  | **Obrigatório**. Nome de usuário ou organização do GitHub a ser consultado.                                                                  |
-| `language` | `string`  | Opcional. Linguagem de programação para filtrar os repositórios. Se não fornecido, retornará repositórios de qualquer linguagem. Exemplo: C# |
-| `per_page` | `integer` | Opcional. Opcional. Define o número de repositórios a serem retornados por página. O valor padrão é 5. Máximo permitido: 10.                 |
-| `page`     | `integer` | Opcional. Indica o número da página de resultados que você deseja retornar. O valor padrão é 1.                                              |
-| `archived`     | `boolean` | Opcional. Indica se deve retornar apenas repositórios arquivados ou não. Aceita `true` ou `false`. Se não fornecido, o filtro será ignorado e retornará tanto repositórios arquivados quanto não arquivados.                                              |
+| Parâmetro  | Tipo      | Descrição                                                                                                                                                                                                    |
+| :--------- | :-------- | :----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `user`     | `string`  | **Obrigatório**. Nome de usuário ou organização do GitHub a ser consultado.                                                                                                                                  |
+| `language` | `string`  | Opcional. Linguagem de programação para filtrar os repositórios. Se não fornecido, retornará repositórios de qualquer linguagem. Exemplo: C#                                                                 |
+| `per_page` | `integer` | Opcional. Opcional. Define o número de repositórios a serem retornados por página. O valor padrão é 5. Máximo permitido: 10.                                                                                 |
+| `page`     | `integer` | Opcional. Indica o número da página de resultados que você deseja retornar. O valor padrão é 1.                                                                                                              |
+| `archived` | `boolean` | Opcional. Indica se deve retornar apenas repositórios arquivados ou não. Aceita `true` ou `false`. Se não fornecido, o filtro será ignorado e retornará tanto repositórios arquivados quanto não arquivados. |
 
 #### Exemplo de requisição
 
