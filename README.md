@@ -2,7 +2,7 @@
 
 Olá, bem-vindo ao meu repositório! ✌️
 
-Aqui está o meu trabalho desenvolvido para o desafio técnico Blipper, onde o objetivo foi construir um chatbot na plataforma Blip, integrado com a API pública do GitHub. Esse bot exibe informações sobre os 5 repositórios mais antigos de [github.com/takenet](https://github.com/orgs/takenet/repositories) **que não estejam arquivados**, tudo de forma automatizada e interativa!
+Aqui está o meu trabalho desenvolvido para o desafio técnico Blipper, onde o objetivo foi construir um chatbot na plataforma Blip, integrado com a API pública do GitHub. Esse bot exibe informações sobre os 5 repositórios mais antigos de [github.com/takenet](https://github.com/orgs/takenet/repositories), tudo de forma automatizada e interativa!
 
 ## Estrutura do repositório
 
@@ -86,11 +86,12 @@ Este endpoint retorna uma lista de 5 até 10 repositórios de uma organização 
 | `language` | `string`  | Opcional. Linguagem de programação para filtrar os repositórios. Se não fornecido, retornará repositórios de qualquer linguagem. Exemplo: C# |
 | `per_page` | `integer` | Opcional. Opcional. Define o número de repositórios a serem retornados por página. O valor padrão é 5. Máximo permitido: 10.                 |
 | `page`     | `integer` | Opcional. Indica o número da página de resultados que você deseja retornar. O valor padrão é 1.                                              |
+| `archived`     | `boolean` | Opcional. Indica se deve retornar apenas repositórios arquivados ou não. Aceita `true` ou `false`. Se não fornecido, o filtro será ignorado e retornará tanto repositórios arquivados quanto não arquivados.                                              |
 
 #### Exemplo de requisição
 
 ```
-curl --location 'http://localhost:3000/repos?user=fulano&language=javascript&per_page=5&page=1' \
+curl --location 'http://localhost:3000/repos?user=takenet&language=C%23&per_page=5&page=1&archived=false' \
 --header 'Authorization: <token_do_github>'
 ```
 
