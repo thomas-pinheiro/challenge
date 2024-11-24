@@ -35,6 +35,7 @@ const validateQueryParams = (params) => {
     { name: 'language', type: 'string', required: false },
     { name: 'per_page', type: 'integer', required: false, maxValue: 10 },
     { name: 'page', type: 'integer', required: false },
+    { name: 'archived', type: 'boolean', required: false },
   ];
 
   paramConfigs.forEach(paramConfig => {
@@ -53,12 +54,15 @@ const validateQueryParams = (params) => {
       if (paramConfig.maxValue && Number(param) > paramConfig.maxValue) {
         throw new HttpError(`${paramConfig.name} cannot exceed ${paramConfig.maxValue}.`, 400);
       }
+      if (paramConfig.type === 'boolean' && param !== 'true' && param !== 'false') {
+        throw new HttpError(`${paramConfig.name} must be 'true' or 'false'.`, 400);
+      }
     }
   });
 };
 
 // Buscar repositórios com paginação e filtro
-const fetchRepositories = async (token, user, language, per_page = 5, user_page = 1) => {
+const fetchRepositories = async (token, user, language, archived = false, per_page = 5, user_page = 1) => {
   let repositories = [];
   let page = 1;
   let total_repositories = per_page * user_page;
@@ -74,14 +78,19 @@ const fetchRepositories = async (token, user, language, per_page = 5, user_page 
         page,
       });
 
-      const filtered = data.filter((repo) =>
-        // Verifica se a linguagem bate (se fornecida) e se o repositório não está arquivado
-        (!repo.archived && (language ? repo.language?.toLowerCase() === language.toLowerCase() : true))
-      );
+      const filtered = data.filter((repo) => {
+        // Verifica se a linguagem é compativel (se fornecida)
+        const languageMatch = language ? repo.language?.toLowerCase() === language.toLowerCase() : true;
+
+        // Se o parâmetro 'archived' foi fornecido, filtra os repositórios com base nesse valor
+        const archivedMatch = archived !== null ? repo.archived === archived : true;
+
+        return languageMatch && archivedMatch;
+      });
 
       repositories = [...repositories, ...filtered];
 
-      if (data.length < 100) break; // Quando houver menos itens que o máximo, logo não há páginas seguintes.
+      if (data.length < 100) break; // Quando houver menos itens que o máximo da página (100), não haverá páginas seguintes.
       page++;
     }
 
@@ -100,13 +109,13 @@ const fetchRepositories = async (token, user, language, per_page = 5, user_page 
 
 // Rota principal
 app.get("/repos", checkAuthorization, async (req, res) => {
-  const { user, language, per_page, page } = req.query;
+  const { user, language, per_page, page, archived } = req.query;
   const token = req.token;
 
   try {
     validateQueryParams(req.query);
 
-    const repositories = await fetchRepositories(token, user, language, per_page, page);
+    const repositories = await fetchRepositories(token, user, language, archived, per_page, page);
 
     res.status(200).json({
       success: true,
