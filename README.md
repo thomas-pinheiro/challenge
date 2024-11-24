@@ -1,3 +1,5 @@
+![logo-blip](https://github.com/user-attachments/assets/6080b9b4-6676-435b-a60c-155403cad5b7)
+
 # Desafio Técnico - Chatbot Blipper
 
 Olá, bem-vindo ao meu repositório! ✌️
