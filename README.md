@@ -1,3 +1,5 @@
+![473_1x_shots_so](https://github.com/user-attachments/assets/bd1903ed-711a-45ab-89dd-75a78e51a693)
+
 # Desafio Técnico - Chatbot Blipper
 
 Olá, bem-vindo ao meu repositório! ✌️
