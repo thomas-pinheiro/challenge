@@ -87,7 +87,7 @@ const fetchRepositories = async (token, user, language, archived = null, per_pag
         const languageMatch = language ? repo.language?.toLowerCase() === language.toLowerCase() : true;
 
         // Se 'archived' foi fornecido, filtra os repositórios com base nesse valor
-        const archivedMatch = archived !== null ? repo.archived === Boolean(archived) : true;
+        const archivedMatch = archived !== null ? repo.archived === archived : true;
 
         return languageMatch && archivedMatch;
       });
@@ -113,12 +113,12 @@ const fetchRepositories = async (token, user, language, archived = null, per_pag
 
 // Rota principal
 app.get("/repos", checkAuthorization, async (req, res) => {
-  const { user, language, per_page, page, archived } = req.query;
-  const token = req.token;
-
   try {
     validateQueryParams(req.query);
-
+    
+    const { user, language, per_page, page, archived } = req.query;
+    const token = req.token;
+    
     const repositories = await fetchRepositories(token, user, language, archived, per_page, page);
 
     res.status(200).json({
