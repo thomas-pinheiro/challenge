@@ -87,7 +87,7 @@ const fetchRepositories = async (token, user, language, archived = null, per_pag
         const languageMatch = language ? repo.language?.toLowerCase() === language.toLowerCase() : true;
 
         // Se 'archived' foi fornecido, filtra os repositórios com base nesse valor
-        const archivedMatch = archived !== null ? repo.archived === archived : !repo.archived;
+        const archivedMatch = archived !== null ? repo.archived === Boolean(archived) : !repo.archived;
 
         return languageMatch && archivedMatch;
       });
