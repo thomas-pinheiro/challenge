@@ -1,4 +1,4 @@
-![logo-blip](https://github.com/user-attachments/assets/6080b9b4-6676-435b-a60c-155403cad5b7)
+![473_1x_shots_so](https://github.com/user-attachments/assets/bd1903ed-711a-45ab-89dd-75a78e51a693)
 
 # Desafio Técnico - Chatbot Blipper
 
