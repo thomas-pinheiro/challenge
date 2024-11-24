@@ -132,4 +132,5 @@ curl --location 'http://localhost:3000/repos?user=takenet&language=C%23&per_page
 
 - `400` Bad Request: O parâmetro `user` é obrigatório e deve ser fornecido.
 - `401` Unauthorized: O Token de autenticação do GitHub deve ser fornecido no cabeçalho `Authorization`.
+- `404` Not Found: Se você tentar acessar um endpoint que não seja `/repos`.
 - `500` Internal Server Error: Ocorreu um erro ao tentar buscar os repositórios do GitHub ou ao processar a solicitação no servidor da API.
