@@ -67,7 +67,7 @@ const fetchRepositories = async (token, user, language, per_page = 5, user_page 
     const octokit = new Octokit({ auth: token });
 
     while (repositories.length < total_repositories) {
-      const { data } = await octokit.request("GET /users/{user}/repos", { 
+      const { data } = await octokit.request("GET /users/{user}/repos", {
         user: user,
         headers: { "X-GitHub-Api-Version": "2022-11-28" },
         per_page: 100,
@@ -75,7 +75,8 @@ const fetchRepositories = async (token, user, language, per_page = 5, user_page 
       });
 
       const filtered = data.filter((repo) =>
-        language ? repo.language?.toLowerCase() === language.toLowerCase() : true
+        // Verifica se a linguagem bate (se fornecida) e se o repositório não está arquivado
+        (!repo.archived && (language ? repo.language?.toLowerCase() === language.toLowerCase() : true))
       );
 
       repositories = [...repositories, ...filtered];
@@ -106,7 +107,7 @@ app.get("/repos", checkAuthorization, async (req, res) => {
     validateQueryParams(req.query);
 
     const repositories = await fetchRepositories(token, user, language, per_page, page);
-    
+
     res.status(200).json({
       success: true,
       data: repositories,

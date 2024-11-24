@@ -2,7 +2,7 @@
 
 Olá, bem-vindo ao meu repositório! ✌️
 
-Aqui está o meu trabalho desenvolvido para o desafio técnico Blipper, onde o objetivo foi construir um chatbot na plataforma Blip, integrado com a API pública do GitHub. Esse bot exibe informações sobre os 5 repositórios mais antigos de [github.com/takenet](https://github.com/orgs/takenet/repositories), tudo de forma automatizada e interativa!
+Aqui está o meu trabalho desenvolvido para o desafio técnico Blipper, onde o objetivo foi construir um chatbot na plataforma Blip, integrado com a API pública do GitHub. Esse bot exibe informações sobre os 5 repositórios mais antigos de [github.com/takenet](https://github.com/orgs/takenet/repositories) **que não estejam arquivados**, tudo de forma automatizada e interativa!
 
 ## Estrutura do repositório
 
