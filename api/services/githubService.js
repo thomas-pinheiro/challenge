@@ -6,8 +6,6 @@ export const fetchRepositories = async (token, user, language, archived = null, 
     let page = 1;
     let totalRepositories = perPage * userPage;
 
-    console.log(`userPage: ${userPage}`)
-
     try {
         const octokit = new Octokit({ auth: token });
 
