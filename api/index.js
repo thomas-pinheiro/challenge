@@ -54,15 +54,19 @@ const validateQueryParams = (params) => {
       if (paramConfig.maxValue && Number(param) > paramConfig.maxValue) {
         throw new HttpError(`${paramConfig.name} cannot exceed ${paramConfig.maxValue}.`, 400);
       }
-      if (paramConfig.type === 'boolean' && param !== 'true' && param !== 'false') {
-        throw new HttpError(`${paramConfig.name} must be 'true' or 'false'.`, 400);
+      if (paramConfig.type === 'boolean') {
+        if (param !== 'true' && param !== 'false') {
+          throw new HttpError(`${paramConfig.name} must be 'true' or 'false'.`, 400);
+        }
+        // Converte para booleano
+        params[paramConfig.name] = param === 'true';
       }
     }
   });
 };
 
 // Buscar repositórios com paginação e filtro
-const fetchRepositories = async (token, user, language, archived = false, per_page = 5, user_page = 1) => {
+const fetchRepositories = async (token, user, language, archived = null, per_page = 5, user_page = 1) => {
   let repositories = [];
   let page = 1;
   let total_repositories = per_page * user_page;
@@ -82,7 +86,7 @@ const fetchRepositories = async (token, user, language, archived = false, per_pa
         // Verifica se a linguagem é compativel (se fornecida)
         const languageMatch = language ? repo.language?.toLowerCase() === language.toLowerCase() : true;
 
-        // Se o parâmetro 'archived' foi fornecido, filtra os repositórios com base nesse valor
+        // Se 'archived' foi fornecido, filtra os repositórios com base nesse valor
         const archivedMatch = archived !== null ? repo.archived === archived : true;
 
         return languageMatch && archivedMatch;
