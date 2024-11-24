@@ -59,7 +59,7 @@ const validateQueryParams = (params) => {
           throw new HttpError(`${paramConfig.name} must be 'true' or 'false'.`, 400);
         }
         // Converte para booleano
-        params[paramConfig.name] = param === 'true';
+        params[paramConfig.name] = param === 'true'; 
       }
     }
   });
@@ -87,7 +87,7 @@ const fetchRepositories = async (token, user, language, archived = null, per_pag
         const languageMatch = language ? repo.language?.toLowerCase() === language.toLowerCase() : true;
 
         // Se 'archived' foi fornecido, filtra os repositórios com base nesse valor
-        const archivedMatch = archived !== null ? repo.archived === archived : true;
+        const archivedMatch = archived !== null ? repo.archived === archived : !repo.archived;
 
         return languageMatch && archivedMatch;
       });
